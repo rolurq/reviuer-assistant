@@ -18,14 +18,10 @@ class StreamHandler(BaseCallbackHandler):
 # Show title and description.
 st.title("Reviuer Assistant")
 
-# Ask user for their OpenAI API key via `st.text_input`.
-# Alternatively, you can store the API key in `./.streamlit/secrets.toml` and access it
-# via `st.secrets`, see https://docs.streamlit.io/develop/concepts/connections/secrets-management
-
 # Create a session state variable to store the chat messages. This ensures that the
 # messages persist across reruns.
 if "messages" not in st.session_state:
-    st.session_state["messages"] = [ChatMessage(role="assistant", content="How can I help you?")]
+    st.session_state["messages"] = []
 
 # Display the existing chat messages via `st.chat_message`.
 for message in st.session_state.messages:
@@ -46,5 +42,5 @@ if prompt := st.chat_input("What is up?"):
     with st.chat_message("assistant"):
         stream_handler = StreamHandler(st.empty())
         perplexity = ChatPerplexity(temperature=0, pplx_api_key=st.secrets["PERPLEXITY_API_KEY"], streaming=True, callbacks=[stream_handler])
-        response = perplexity.invoke([ChatMessage(role="system", content="You are a good agent")] + st.session_state.messages[1:])
+        response = perplexity.invoke(st.session_state.messages)
         st.session_state.messages.append(ChatMessage(role="assistant", content=response.content))
