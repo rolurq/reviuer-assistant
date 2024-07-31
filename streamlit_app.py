@@ -123,7 +123,7 @@ if prompt := st.chat_input("What is up?"):
             pplx_api_key=st.secrets["PERPLEXITY_API_KEY"],
             streaming=True,
             callbacks=[stream_handler],
-            model="llama-3-sonar-small-32k-online",
+            model="llama-3.1-sonar-large-128k-online",
             temperature=0,
         )
         response = perplexity.invoke(
